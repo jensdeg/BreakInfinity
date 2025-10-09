@@ -6,22 +6,23 @@ public readonly partial struct BigDouble
 {
     public readonly double Mantissa { get; }
 
-    public readonly int Exponent { get; }
+    public readonly uint Exponent { get; }
 
-    public override string ToString() => $"{Mantissa}e{Exponent}";
+    public readonly double CalculatedValue
+        => Mantissa * Math.Pow(10, Exponent);
+
+    public readonly bool IsBroken 
+        => double.IsInfinity(CalculatedValue);
+
+    private readonly double MantissaRounded 
+        => Math.Round(Mantissa, 2);
+
+    public override string ToString() => $"{MantissaRounded}e{Exponent}";
 
     public BigDouble()
     {
         Mantissa = 0;
         Exponent = 0;
-    }
-
-    public BigDouble(double mantissa, int exponent)
-    {
-        if (mantissa > 10) throw new NotImplementedException();
-        if (mantissa < 0 || exponent < 0) throw new NotImplementedException("negative numbers not supported yet");
-        Mantissa = mantissa;
-        Exponent = exponent;
     }
 
     public BigDouble(double value)
@@ -34,8 +35,16 @@ public readonly partial struct BigDouble
             return;
         }
 
-        Exponent = (int)Math.Floor(Math.Log10(value));
-        Mantissa = Math.Round((value / Math.Pow(10, Exponent)), 2);
+        Exponent = (uint)Math.Floor(Math.Log10(value));
+        Mantissa = (value / Math.Pow(10, Exponent));
+    }
+
+    public BigDouble(double mantissa, uint exponent)
+    {
+        if (mantissa > 10) throw new NotImplementedException();
+        if (mantissa < 0 || exponent < 0) throw new NotImplementedException("negative numbers not supported yet");
+        Mantissa = mantissa;
+        Exponent = exponent;
     }
 
     public bool Equals(BigDouble other)

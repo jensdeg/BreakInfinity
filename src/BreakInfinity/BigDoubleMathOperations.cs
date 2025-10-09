@@ -22,31 +22,60 @@ public readonly partial struct BigDouble
 
     public static BigDouble operator +(BigDouble left, BigDouble right)
     {
+        if (!left.IsBroken && !right.IsBroken) 
+        {
+            double value = left.CalculatedValue + right.CalculatedValue;
+            if (!double.IsInfinity(value)) return new(value);
+        }
+
         throw new NotImplementedException();
     }
 
     public static BigDouble operator -(BigDouble left, BigDouble right)
     {
+        if (!left.IsBroken && !right.IsBroken)
+        {
+            double value = left.CalculatedValue - right.CalculatedValue;
+            if (!double.IsInfinity(value)) return new(value);
+        }
+
         throw new NotImplementedException();
     }
 
     public static BigDouble operator ++(BigDouble value)
     {
+        if (!value.IsBroken)
+            return new BigDouble(value.CalculatedValue + 1);
+
         throw new NotImplementedException();
     }
 
     public static BigDouble operator --(BigDouble value)
     {
+        if (!value.IsBroken)
+            return new BigDouble(value.CalculatedValue - 1);
         throw new NotImplementedException();
     }
 
     public static BigDouble operator *(BigDouble left, BigDouble right)
     {
+        if (!left.IsBroken && !right.IsBroken)
+        {
+            double value = left.CalculatedValue * right.CalculatedValue;
+            if (!double.IsInfinity(value)) return new(value);
+        }
+
         throw new NotImplementedException();
     }
 
     public static BigDouble operator /(BigDouble left, BigDouble right)
     {
+        if (!left.IsBroken && !right.IsBroken)
+        {
+            double value = left.CalculatedValue / right.CalculatedValue;
+            if (!double.IsInfinity(value)) return new(value);
+        }
+
         throw new NotImplementedException();
     }
 
