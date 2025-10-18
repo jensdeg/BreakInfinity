@@ -10,26 +10,34 @@ public readonly partial struct BigDouble
       IModulusOperators<BigDouble, BigDouble, BigDouble>,
       IDecrementOperators<BigDouble>,
       IIncrementOperators<BigDouble>,
-      IMinMaxValue<BigDouble>
+      IMinMaxValue<BigDouble>,
+      IUnaryNegationOperators<BigDouble, BigDouble>
 {
     public static BigDouble AdditiveIdentity => new();
 
     public static BigDouble MultiplicativeIdentity => new(1);
 
-    public static BigDouble MaxValue => new(9.99, 9999);
+    public static BigDouble MaxValue => new(9.99, uint.MaxValue);
 
     public static BigDouble MinValue => new(0);
 
     public static BigDouble operator +(BigDouble left, BigDouble right)
     {
-        if (!left.IsBroken && !right.IsBroken) 
+        if (!left.IsBroken && !right.IsBroken)
         {
             double value = left.CalculatedValue + right.CalculatedValue;
             if (!double.IsInfinity(value)) return new(value);
         }
-
+        if (left.Exponent == right.Exponent)
+        {
+            var mantissa = left.Mantissa + right.Mantissa;
+            return new(mantissa, left.Exponent);
+        }
         throw new NotImplementedException();
     }
+
+    public static BigDouble operator -(BigDouble value)
+        => new(-value.Mantissa, value.Exponent);
 
     public static BigDouble operator -(BigDouble left, BigDouble right)
     {
@@ -37,6 +45,11 @@ public readonly partial struct BigDouble
         {
             double value = left.CalculatedValue - right.CalculatedValue;
             if (!double.IsInfinity(value)) return new(value);
+        }
+        if (left.Exponent == right.Exponent)
+        {
+            var mantissa = left.Mantissa - right.Mantissa;
+            return new(mantissa, left.Exponent);
         }
 
         throw new NotImplementedException();
@@ -65,7 +78,9 @@ public readonly partial struct BigDouble
             if (!double.IsInfinity(value)) return new(value);
         }
 
-        throw new NotImplementedException();
+        var exponent = left.Exponent + right.Exponent;
+        var mantissa = left.Mantissa * right.Mantissa;
+        return new(mantissa, exponent);
     }
 
     public static BigDouble operator /(BigDouble left, BigDouble right)
@@ -76,7 +91,9 @@ public readonly partial struct BigDouble
             if (!double.IsInfinity(value)) return new(value);
         }
 
-        throw new NotImplementedException();
+        var exponent = left.Exponent - right.Exponent;
+        var mantissa = left.Mantissa / right.Mantissa;
+        return new(mantissa, exponent);
     }
 
     public static BigDouble operator %(BigDouble left, BigDouble right)
