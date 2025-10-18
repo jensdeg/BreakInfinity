@@ -35,7 +35,7 @@ public readonly partial struct BigDouble
             Exponent = 0;
             return;
         }
-        if(value < 0)
+        if (value < 0)
         {
             Exponent = (uint)Math.Floor(Math.Log10(-value));
             Mantissa = -(-value / Math.Pow(10, Exponent));
