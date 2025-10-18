@@ -11,13 +11,13 @@ public readonly partial struct BigDouble
     public readonly double CalculatedValue
         => Mantissa * Math.Pow(10, Exponent);
 
-    public readonly bool IsBroken 
+    public readonly bool IsBroken
         => double.IsInfinity(CalculatedValue);
 
-    private readonly double MantissaRounded 
+    private readonly double MantissaRounded
         => Math.Round(Mantissa, 2);
 
-    public override string ToString() 
+    public override string ToString()
         => $"{MantissaRounded}e{Exponent}";
 
     public BigDouble()
@@ -28,11 +28,17 @@ public readonly partial struct BigDouble
 
     public BigDouble(double value)
     {
-        if(double.IsInfinity(value)) value = double.MaxValue;
+        if (double.IsInfinity(value)) value = double.MaxValue;
         if (value == 0)
         {
             Mantissa = 0;
             Exponent = 0;
+            return;
+        }
+        if(value < 0)
+        {
+            Exponent = (uint)Math.Floor(Math.Log10(-value));
+            Mantissa = -(-value / Math.Pow(10, Exponent));
             return;
         }
 
@@ -47,7 +53,16 @@ public readonly partial struct BigDouble
             var leftover = new BigDouble(mantissa);
             Mantissa = leftover.Mantissa;
             Exponent = leftover.Exponent + exponent;
+            return;
         }
+        if (mantissa < -10)
+        {
+            var leftover = new BigDouble(mantissa);
+            Mantissa = leftover.Mantissa;
+            Exponent = leftover.Exponent + exponent;
+            return;
+        }
+
         Mantissa = mantissa;
         Exponent = exponent;
     }
