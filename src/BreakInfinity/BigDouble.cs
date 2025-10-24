@@ -18,7 +18,9 @@ public readonly partial struct BigDouble
         => Math.Round(Mantissa, 2);
 
     public override string ToString()
-        => $"{MantissaRounded}e{Exponent}";
+        => this >= new BigDouble(1e4)
+        ? $"{MantissaRounded}e{Exponent}"
+        : CalculatedValue.ToString();
 
     public BigDouble()
     {
@@ -83,10 +85,12 @@ public readonly partial struct BigDouble
         if (Exponent != other.Exponent) return Exponent.CompareTo(other.Exponent);
         return Mantissa.CompareTo(other.Mantissa);
     }
+}
 
-    public static bool operator ==(BigDouble left, BigDouble right)
-        => left.Equals(right);
-
-    public static bool operator !=(BigDouble left, BigDouble right)
-        => !(left == right);
+public static class BigDoubleExtensions
+{
+    public static BigDouble ToBigDouble(this double value) => new(value);
+    public static BigDouble ToBigDouble(this int value) => new(value);
+    public static BigDouble ToBigDouble(this long value) => new(value);
+    public static BigDouble ToBigDouble(this float value) => new(value);
 }
