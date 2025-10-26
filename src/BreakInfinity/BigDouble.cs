@@ -85,12 +85,19 @@ public readonly partial struct BigDouble
         if (Exponent != other.Exponent) return Exponent.CompareTo(other.Exponent);
         return Mantissa.CompareTo(other.Mantissa);
     }
+
+    public static implicit operator BigDouble(int value) => new(value);
+    public static implicit operator BigDouble(double value) => new(value);
+    public static implicit operator BigDouble(long value) => new(value);
+    public static implicit operator BigDouble(float value) => new(value);
+    public static implicit operator BigDouble(decimal value) => new((double)value);
 }
 
 public static class BigDoubleExtensions
 {
-    public static BigDouble ToBigDouble(this double value) => new(value);
     public static BigDouble ToBigDouble(this int value) => new(value);
+    public static BigDouble ToBigDouble(this double value) => new(value);
     public static BigDouble ToBigDouble(this long value) => new(value);
     public static BigDouble ToBigDouble(this float value) => new(value);
+    public static BigDouble ToBigDouble(this decimal value) => new((double)value);
 }
