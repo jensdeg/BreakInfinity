@@ -82,6 +82,17 @@ public readonly partial struct BigDouble
 
     public int CompareTo(BigDouble other)
     {
+        if(double.IsNegative(Mantissa) || double.IsNegative(other.Mantissa))
+        {
+            if (double.IsNegative(Mantissa) && double.IsNegative(other.Mantissa))
+            {
+                if (Exponent != other.Exponent) return other.Exponent.CompareTo(Exponent);
+                return Mantissa.CompareTo(other.Mantissa);
+            }
+            else if (double.IsNegative(Mantissa)) return -1;
+            else return 1;
+        }
+
         if (Exponent != other.Exponent) return Exponent.CompareTo(other.Exponent);
         return Mantissa.CompareTo(other.Mantissa);
     }
