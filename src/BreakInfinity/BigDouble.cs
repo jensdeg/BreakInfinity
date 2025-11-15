@@ -17,10 +17,13 @@ public readonly partial struct BigDouble
     private readonly double MantissaRounded
         => Math.Round(Mantissa, 2);
 
+    private readonly double CalculatedValueRounded
+        => Math.Round(CalculatedValue, 2);
+
     public override string ToString()
         => this >= new BigDouble(1e4)
         ? $"{MantissaRounded}e{Exponent}"
-        : CalculatedValue.ToString();
+        : CalculatedValueRounded.ToString();
 
     public BigDouble()
     {
